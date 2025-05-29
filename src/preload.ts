@@ -3,5 +3,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  hideWindow: () => ipcRenderer.send('hide-window')
+  hideWindow: () => ipcRenderer.send('hide-window'),
+  testNotification: () => ipcRenderer.send('test-notification')
 });

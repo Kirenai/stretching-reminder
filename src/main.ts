@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Tray } from 'electron';
+import { app, BrowserWindow, ipcMain, Notification, Tray } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 
@@ -9,6 +9,7 @@ if (started) {
 
 let mainWindow: BrowserWindow;
 let tray: Tray;
+let notificationInterval: NodeJS.Timeout;
 
 const createWindow = () => {
   // Create the browser window.
@@ -35,8 +36,44 @@ const createWindow = () => {
   })
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
+
+  // Iniciar el temporizador de notificaciones
+  startNotificationTimer();
 };
+
+// Función para mostrar la notificación
+function showStretchNotification() {
+  const notification = new Notification({
+    title: '¡Hora de estirarse!',
+    body: 'Es momento de tomar un descanso y hacer algunos estiramientos.',
+    icon: path.join(app.getAppPath(), 'src/assets/streched_64.png'),
+    silent: false
+  });
+
+  notification.on('click', () => {
+    if (mainWindow) {
+      mainWindow.show();
+    }
+  });
+
+  notification.show();
+}
+
+// Función para iniciar el temporizador de notificaciones
+function startNotificationTimer() {
+  // Limpiar cualquier intervalo existente
+  if (notificationInterval) {
+    clearInterval(notificationInterval);
+  }
+
+  // Mostrar una notificación cada hora (3600000 ms)
+  notificationInterval = setInterval(showStretchNotification, 3600000);
+
+  // También podemos mostrar una notificación inmediatamente para probar
+  // Descomenta la siguiente línea para probar:
+  // setTimeout(showStretchNotification, 5000);
+}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -68,3 +105,8 @@ app.on('activate', () => {
 ipcMain.on('hide-window', () => {
   mainWindow.hide();
 });
+
+ipcMain.on('test-notification', () => {
+  showStretchNotification();
+});
+

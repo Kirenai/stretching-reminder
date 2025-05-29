@@ -31,6 +31,11 @@ import './index.css';
 console.log('👋 This message is being logged by "renderer.ts", included via Vite');
 
 document.getElementById('minimizar').onclick = () => window.electronAPI.hideWindow();
+
+document.getElementById('test-notification')?.addEventListener('click', () => {
+  window.electronAPI.testNotification();
+});
+
 document.body.classList.add('dark');
 
 const themeButton = document.getElementById('theme');
