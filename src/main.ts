@@ -3,6 +3,7 @@ import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import schedule from 'node-schedule';
 import { getAssetPath } from './utils/path-utils';
+import { setAutoLaunch } from './launch/auto-launch';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -12,15 +13,6 @@ if (started) {
 let mainWindow: BrowserWindow;
 let tray: Tray;
 let stretchJob: schedule.Job;
-
-const setAutoLaunch = (enabled: boolean) => {
-  if (process.platform === 'win32') {
-    app.setLoginItemSettings({
-      openAtLogin: enabled,
-      args: ['--process-start-args', '"--hidden"']
-    });
-  }
-}
 
 const createWindow = () => {
   // Create the browser window.

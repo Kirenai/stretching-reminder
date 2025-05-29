@@ -32,7 +32,8 @@ body.dark {
     font-weight: bold;
     background: #fff;
     color: #222;
-    transition: background 0.4s ease-in-out, color 0.4s ease-in-out;
+    margin-bottom: 0.5rem;
+    transition: backgroud 0.4s ease-in-out, color 0.4s ease-in-out;
 }
 
 .minimizar-button:hover {
@@ -49,6 +50,24 @@ body.dark .minimizar-button {
 body.dark .minimizar-button:hover {
     background: #FFF;
     color: #222;
+}
+
+.header-1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.test-button {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    padding: 0.2rem;
+    border: none;
+    cursor: pointer;
+    background: none;
+    font-size: 1.5rem;
 }
 
 .theme-toggle {
