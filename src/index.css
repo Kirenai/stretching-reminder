@@ -33,23 +33,13 @@ body.dark {
     background: #fff;
     color: #222;
     margin-bottom: 0.5rem;
-    transition: backgroud 0.4s ease-in-out, color 0.4s ease-in-out;
-}
-
-.minimizar-button:hover {
-    background: #222;
-    color: #FFF;
+    transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
 body.dark .minimizar-button {
     background: #444;
     color: #FFF;
     box-shadow: 0.2rem 0.1rem 0.5rem #444;
-}
-
-body.dark .minimizar-button:hover {
-    background: #FFF;
-    color: #222;
 }
 
 .header-1 {
