@@ -29,3 +29,20 @@
 import './index.css';
 
 console.log('👋 This message is being logged by "renderer.ts", included via Vite');
+
+document.getElementById('minimizar').onclick = () => window.electronAPI.hideWindow();
+document.body.classList.add('dark');
+
+const themeButton = document.getElementById('theme');
+const icon = document.getElementById('icon');
+
+themeButton.onclick = () => {
+  document.body.classList.toggle('dark');
+  if (document.body.classList.contains('dark')) {
+    icon.className = 'moon';
+    icon.textContent = '🌙';
+  } else {
+    icon.className = 'sun';
+    icon.textContent = '☀️';
+  }
+}
