@@ -1,7 +1,8 @@
-import { app, BrowserWindow, ipcMain, Notification, Tray, powerMonitor } from 'electron';
+import { app, BrowserWindow, ipcMain, Notification, powerMonitor, Tray } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import schedule from 'node-schedule';
+import { getAssetPath } from './utils/path-utils';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -11,16 +12,6 @@ if (started) {
 let mainWindow: BrowserWindow;
 let tray: Tray;
 let stretchJob: schedule.Job;
-
-// Función para obtener la ruta correcta a los assets
-function getAssetPath(...paths: string[]): string {
-  return path.join(
-    app.isPackaged
-      ? path.join(process.resourcesPath, 'assets')
-      : path.join(app.getAppPath(), 'src/assets'),
-    ...paths
-  );
-}
 
 const setAutoLaunch = (enabled: boolean) => {
   if (process.platform === 'win32') {
