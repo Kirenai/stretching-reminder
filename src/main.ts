@@ -23,6 +23,8 @@ const createWindow = () => {
       preload: path.join(__dirname, 'preload.js'),
     },
     autoHideMenuBar: true,
+    maximizable: false,
+    resizable: false,
   });
 
   // and load the index.html of the app.
