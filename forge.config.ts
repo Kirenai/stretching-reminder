@@ -10,6 +10,18 @@ import { FuseV1Options, FuseVersion } from '@electron/fuses';
 const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
+    extraResource: [
+      'src/assets',
+    ],
+    executableName: 'StretchingReminder',
+    appCopyright: 'Copyright © 2025',
+    win32metadata: {
+      CompanyName: 'Kirenai Tech',
+      FileDescription: 'Stretching Reminder',
+      OriginalFilename: 'StretchingReminder.exe',
+      ProductName: 'Stretching Reminder',
+      InternalName: 'StretchingReminder',
+    }
   },
   rebuildConfig: {},
   makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],

@@ -1,6 +1,7 @@
-import { app, BrowserWindow, ipcMain, Notification, Tray } from 'electron';
+import { app, BrowserWindow, ipcMain, Notification, Tray, powerMonitor } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
+import schedule from 'node-schedule';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -9,7 +10,17 @@ if (started) {
 
 let mainWindow: BrowserWindow;
 let tray: Tray;
-let notificationInterval: NodeJS.Timeout;
+let stretchJob: schedule.Job;
+
+// Función para obtener la ruta correcta a los assets
+function getAssetPath(...paths: string[]): string {
+  return path.join(
+    app.isPackaged
+      ? path.join(process.resourcesPath, 'assets')
+      : path.join(app.getAppPath(), 'src/assets'),
+    ...paths
+  );
+}
 
 const setAutoLaunch = (enabled: boolean) => {
   if (process.platform === 'win32') {
@@ -38,7 +49,8 @@ const createWindow = () => {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
 
-  tray = new Tray('src/assets/streched.png');
+  const trayIconName = process.platform === 'win32' ? 'streched.ico' : 'streched.png';
+  tray = new Tray(getAssetPath(trayIconName));
   tray.setToolTip('Recordatorio de estiramientos')
   tray.on('click', () => {
     mainWindow.show()
@@ -51,7 +63,7 @@ const createWindow = () => {
   startNotificationTimer();
 
   // Configurar inicio automático (habilitado por defecto)
-  setAutoLaunch(true);
+  setAutoLaunch(false);
 };
 
 // Función para mostrar la notificación
@@ -59,7 +71,7 @@ function showStretchNotification() {
   const notification = new Notification({
     title: '¡Hora de estirarse!',
     body: 'Es momento de tomar un descanso y hacer algunos estiramientos.',
-    icon: path.join(app.getAppPath(), 'src/assets/streched_64.png'),
+    icon: getAssetPath('streched_64.png'),
     silent: false
   });
 
@@ -75,16 +87,16 @@ function showStretchNotification() {
 // Función para iniciar el temporizador de notificaciones
 function startNotificationTimer() {
   // Limpiar cualquier intervalo existente
-  if (notificationInterval) {
-    clearInterval(notificationInterval);
+  if (stretchJob) {
+    stretchJob.cancel();
   }
 
-  // Mostrar una notificación cada hora (3600000 ms)
-  notificationInterval = setInterval(showStretchNotification, 3600000);
+  // Mostrar una notificación cada hora, cada cuando en el reloj parque 1:00:00, 2:00:00, etc.
+  stretchJob = schedule.scheduleJob('0 0 * * * *', showStretchNotification);
 
   // También podemos mostrar una notificación inmediatamente para probar
-  // Descomenta la siguiente línea para probar:
-  // setTimeout(showStretchNotification, 5000);
+  // Descomenta la siguiente línea para probar cada 30 segundos en el reloj:
+  // stretchJob = schedule.scheduleJob('30 * * * * *', showStretchNotification);
 }
 
 // This method will be called when Electron has finished
@@ -92,6 +104,18 @@ function startNotificationTimer() {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow();
+
+  powerMonitor.on('resume', () => {
+    // Reiniciar el temporizador de notificaciones al reanudar el sistema
+    startNotificationTimer();
+  });
+
+  powerMonitor.on('suspend', () => {
+    // Cancelar el temporizador de notificaciones al suspender el sistema
+    if (stretchJob) {
+      stretchJob.cancel();
+    }
+  })
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

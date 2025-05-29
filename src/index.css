@@ -9,7 +9,7 @@ body {
     padding: 2rem;
     background: #fff;
     color: #222;
-    transition: background 0.3s;
+    transition: background 0.1s;
 }
 
 body.dark {
