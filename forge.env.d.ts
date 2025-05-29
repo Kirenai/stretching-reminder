@@ -3,6 +3,8 @@
 export interface IElectronAPI {
   hideWindow: () => void;
   testNotification: () => void;
+  getAutoLaunchEnabled: () => boolean;
+  setAutoLaunchEnabled: (enabled: boolean) => void;
 }
 
 declare global {

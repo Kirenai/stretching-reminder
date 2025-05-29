@@ -11,6 +11,15 @@ let mainWindow: BrowserWindow;
 let tray: Tray;
 let notificationInterval: NodeJS.Timeout;
 
+const setAutoLaunch = (enabled: boolean) => {
+  if (process.platform === 'win32') {
+    app.setLoginItemSettings({
+      openAtLogin: enabled,
+      args: ['--process-start-args', '"--hidden"']
+    });
+  }
+}
+
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -40,6 +49,9 @@ const createWindow = () => {
 
   // Iniciar el temporizador de notificaciones
   startNotificationTimer();
+
+  // Configurar inicio automático (habilitado por defecto)
+  setAutoLaunch(true);
 };
 
 // Función para mostrar la notificación
@@ -110,3 +122,13 @@ ipcMain.on('test-notification', () => {
   showStretchNotification();
 });
 
+// Agregar estos manejadores para controlar el inicio automático desde la interfaz
+ipcMain.on('get-auto-launch', (event) => {
+  const settings = app.getLoginItemSettings();
+  event.returnValue = settings.openAtLogin;
+});
+
+
+ipcMain.on('set-auto-launch', (event, enabled) => {
+  setAutoLaunch(enabled);
+});

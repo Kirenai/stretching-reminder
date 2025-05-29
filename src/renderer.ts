@@ -51,3 +51,16 @@ themeButton.onclick = () => {
     icon.textContent = '☀️';
   }
 }
+
+// Controlar el inicio automático
+const autoLaunchToggle = document.getElementById('auto-launch-toggle') as HTMLInputElement;
+if (autoLaunchToggle) {
+  // Obtener el estado actual
+  autoLaunchToggle.checked = window.electronAPI.getAutoLaunchEnabled();
+
+  // Manejar cambios
+  autoLaunchToggle.addEventListener('change', () => {
+    window.electronAPI.setAutoLaunchEnabled(autoLaunchToggle.checked);
+  });
+}
+
