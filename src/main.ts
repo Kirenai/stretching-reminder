@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Notification, powerMonitor, Tray } from 'electron';
+import { app, BrowserWindow, ipcMain, Notification, powerMonitor, Tray, Menu } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import schedule from 'node-schedule';
@@ -41,6 +41,12 @@ const createWindow = () => {
     mainWindow.show()
   })
 
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'Exit', click: () => app.quit() }
+  ])
+  tray.setToolTip('Recordatorio de estiramientos')
+  tray.setContextMenu(contextMenu)
+
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
 
@@ -48,7 +54,7 @@ const createWindow = () => {
   startNotificationTimer();
 
   // Configurar inicio automático (habilitado por defecto)
-  setAutoLaunch(false);
+  // setAutoLaunch(false);
 };
 
 // Función para mostrar la notificación
